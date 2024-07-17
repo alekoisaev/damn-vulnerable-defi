@@ -1,9 +1,11 @@
 # Solutions
-1. Unstoppable
-DoS Vault contract by sending 10 DVT tokens.
-`token.transfer(address(vault), 10 ether);`
 
------------------------
+1. Unstoppable
+   DoS Vault contract by sending 10 DVT tokens.
+   `token.transfer(address(vault), 10 ether);`
+
+---
+
 # Damn Vulnerable DeFi
 
 Damn Vulnerable DeFi is _the_ smart contract security playground for developers, security researchers and educators.
@@ -15,7 +17,7 @@ Use Damn Vulnerable DeFi to:
 - Sharpen your auditing and bug-hunting skills.
 - Learn how to detect, test and fix flaws in realistic scenarios to become a security-minded developer.
 - Benchmark smart contract security tooling.
-- Create educational content on smart contract security with articles, tutorials, talks, courses, workshops, trainings, CTFs, etc. 
+- Create educational content on smart contract security with articles, tutorials, talks, courses, workshops, trainings, CTFs, etc.
 
 ## Install
 
@@ -39,7 +41,7 @@ To solve a challenge:
 2. Uncover the flaw(s) in the challenge's smart contracts.
 3. Code your solution in the corresponding test file.
 4. Try your solution with `forge test --mp test/<challenge-name>/<ChallengeName>.t.sol`.
-If the test passes, you've solved the challenge!
+   If the test passes, you've solved the challenge!
 
 Challenges may have more than one possible solution.
 
