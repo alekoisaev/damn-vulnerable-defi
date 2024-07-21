@@ -1,8 +1,15 @@
 # Solutions
 
-1. Unstoppable
-   DoS Vault contract by sending 10 DVT tokens.
-   `token.transfer(address(vault), 10 ether);`
+1. ## Unstoppable.
+
+DoS Vault contract by sending 10 DVT tokens.
+`token.transfer(address(vault), 10 ether);`
+
+2. ## Naive-Receiver
+
+ERC2771 + multicall attack.
+
+https://blog.openzeppelin.com/arbitrary-address-spoofing-vulnerability-erc2771context-multicall-public-disclosure
 
 ---
 
